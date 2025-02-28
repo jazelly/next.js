@@ -85,6 +85,11 @@ export function createPrefetchURL(href: string): URL | null {
     return null
   }
 
+  // Don't prefetch during development (improves compilation performance)
+  if (process.env.NODE_ENV === 'development') {
+    return null
+  }
+
   let url: URL
   try {
     url = new URL(addBasePath(href), window.location.href)
@@ -94,11 +99,6 @@ export function createPrefetchURL(href: string): URL | null {
     throw new Error(
       `Cannot prefetch '${href}' because it cannot be converted to a URL.`
     )
-  }
-
-  // Don't prefetch during development (improves compilation performance)
-  if (process.env.NODE_ENV === 'development') {
-    return null
   }
 
   // External urls can't be prefetched in the same way.
